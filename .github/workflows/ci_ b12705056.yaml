@@ -33,7 +33,6 @@ jobs:
 
       - name: Test
         run: npm run test
-        continue-on-error: true
 
       - name: Debug test-results
         run: ls -la test-results/ || echo "test-results directory not found"
