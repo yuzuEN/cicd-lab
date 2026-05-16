@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  checks: write
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript typecheck
+        run: npm run typecheck
+
+      - name: Prettier check
+        run: npm run format:check
+
+      - name: Test
+        run: npm run test
+
+      - name: Show test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Vitest Results
+          path: test-results/junit.xml
+          reporter: java-junit
